@@ -56,15 +56,26 @@ namespace Bardock.Caching.Proxies
             GetProxy(key).SetData(data);
         }
 
+        /// <summary>
+        /// Clear a cached item by specified params
+        /// </summary>
         public void Clear(params object[] @params)
         {
             string key = BuildKey(@params);
             GetProxy(key).Clear();
         }
 
-        public void Clear()
+        /// <summary>
+        /// Clear all cached items
+        /// </summary>
+        /// <param name="params">
+        /// Specify some of the params in order to filter the cached items to be removed.
+        /// If no param is specified, removes all cached items for this proxy instance.
+        /// </param>
+        public void ClearAll(params object[] @params)
         {
-            // TODO: Get all keys from ICache and remove them
+            string keyPrefix = BuildKey(@params);
+            _cache.RemoveAll(keyPrefix: keyPrefix);
         }
 
         protected string BuildKey(params object[] @params)
