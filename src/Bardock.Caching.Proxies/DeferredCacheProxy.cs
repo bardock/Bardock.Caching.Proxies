@@ -14,15 +14,15 @@ namespace Bardock.Caching.Proxies
         protected Func<T, TimeSpan> _expiration;
 
         public DeferredCacheProxy(
-            ICache cache, 
-            string key, 
+            ICache cache,
+            string key,
             TimeSpan expiration = default(TimeSpan))
-            : this(cache, key, x => expiration) 
+            : this(cache, key, x => expiration)
         { }
 
         public DeferredCacheProxy(
-            ICache cache, 
-            string key, 
+            ICache cache,
+            string key,
             Func<T, TimeSpan> expiration)
         {
             _cache = cache;
@@ -31,7 +31,7 @@ namespace Bardock.Caching.Proxies
             _key = key;
             _expiration = expiration;
         }
-        
+
         public T GetData(Func<T> dataLoadFunc, object locker = null)
         {
             T data;
@@ -78,4 +78,3 @@ namespace Bardock.Caching.Proxies
         }
     }
 }
-    

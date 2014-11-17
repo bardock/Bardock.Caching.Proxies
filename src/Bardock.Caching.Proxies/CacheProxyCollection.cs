@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Sixeyed.Caching;
 
 namespace Bardock.Caching.Proxies
 {
     /// <summary>
-    /// This class manages a set of proxies with same data type. 
+    /// This class manages a set of proxies with same data type.
     /// It identifies each proxy building a key by given variable params
     /// </summary>
     /// <typeparam name="T"></typeparam>
@@ -21,17 +17,17 @@ namespace Bardock.Caching.Proxies
         public CacheProxyCollection(
             Func<object[], Func<T>> dataLoadFunc,
             object locker,
-            ICache cache, 
-            string keyPrefix, 
+            ICache cache,
+            string keyPrefix,
             TimeSpan expiration = default(TimeSpan))
-            : this(dataLoadFunc, locker, cache, keyPrefix, x => expiration) 
+            : this(dataLoadFunc, locker, cache, keyPrefix, x => expiration)
         { }
 
         public CacheProxyCollection(
             Func<object[], Func<T>> dataLoadFunc,
             object locker,
-            ICache cache, 
-            string keyPrefix, 
+            ICache cache,
+            string keyPrefix,
             Func<T, TimeSpan> expiration)
             : base(cache, keyPrefix, expiration)
         {
@@ -49,6 +45,5 @@ namespace Bardock.Caching.Proxies
         {
             return base.GetData(_dataLoadFunc(@params), _locker, @params: @params);
         }
-
     }
 }
