@@ -33,11 +33,5 @@ namespace Bardock.Caching.Proxies
         {
             return base.GetData(_dataLoadFunc, _locker);
         }
-
-        public void SetData(T value)
-        {
-            base.SetData(value);
-        }
     }
 }
-    

@@ -36,6 +36,7 @@ namespace Bardock.Caching.Proxies
             : base(cache, keyPrefix, expiration)
         {
             _dataLoadFunc = dataLoadFunc;
+            _locker = locker;
         }
 
         /// <summary>
@@ -47,11 +48,6 @@ namespace Bardock.Caching.Proxies
         public T GetData(params object[] @params)
         {
             return base.GetData(_dataLoadFunc(@params), _locker, @params: @params);
-        }
-
-        public void SetData(T data, params object[] @params)
-        {
-            base.SetData(data, @params);
         }
 
     }

@@ -7,6 +7,7 @@ namespace Bardock.Caching.Proxies
     public class DeferredCacheProxy<T>
     {
         public static readonly TimeSpan EXPIRATION_DEFAULT = TimeSpan.FromHours(2);
+        private static readonly StringLocker _locker = new StringLocker();
 
         protected ICache _cache;
         protected string _key;
@@ -75,8 +76,6 @@ namespace Bardock.Caching.Proxies
         {
             _cache.Remove(_key);
         }
-
-        private static StringLocker _locker = new StringLocker();
     }
 }
     

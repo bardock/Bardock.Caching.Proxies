@@ -21,7 +21,6 @@ namespace Bardock.Caching.Proxies
         protected ICache _cache;
         protected string _keyPrefix;
         protected Func<T, TimeSpan> _expiration;
-        protected Dictionary<string, DeferredCacheProxy<T>> _proxies = new Dictionary<string, DeferredCacheProxy<T>>();
 
         public DeferredCacheProxyCollection(
             ICache cache, 
@@ -69,7 +68,6 @@ namespace Bardock.Caching.Proxies
         public void Clear()
         {
             // TODO: Get all keys from ICache and remove them
-            _proxies.Values.ToList().ForEach(x => x.Clear());
         }
 
         protected string BuildKey(params object[] @params)
@@ -88,11 +86,7 @@ namespace Bardock.Caching.Proxies
 
         protected DeferredCacheProxy<T> GetProxy(string key)
         {
-            if (!_proxies.ContainsKey(key))
-            {
-                _proxies[key] = new DeferredCacheProxy<T>(_cache, key, _expiration);
-            }
-            return _proxies[key];
+            return new DeferredCacheProxy<T>(_cache, key, _expiration);
         }
     }
 }
