@@ -10,7 +10,7 @@ namespace Bardock.Caching.Proxies
     /// </summary>
     /// <typeparam name="TData">Type of cached data</typeparam>
     /// <typeparam name="TParams">Type of params that identifies a cached item</typeparam>
-    public class CacheProxyCollection<TData, TParams> : DeferredCacheProxyCollection<TData, TParams>
+    public class CacheProxyCollection<TParams, TData> : DeferredCacheProxyCollection<TParams, TData>
     {
         private Func<TParams, TData> _dataLoadFunc;
         private object _locker;
@@ -51,7 +51,7 @@ namespace Bardock.Caching.Proxies
         /// </summary>
         public TData GetData(TParams @params)
         {
-            return base.GetData(_dataLoadFunc, @params: @params, locker: _locker);
+            return base.GetData(@params, _dataLoadFunc, locker: _locker);
         }
     }
 }

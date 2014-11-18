@@ -51,7 +51,7 @@ Use a `CacheProxyCollection` in order to abstract access to a collection of cach
 
 	// Define a proxy for database users caching for 1 second
 	// Use user ID (int) to identify each item 
-	var proxy = new CacheProxyCollection<User, int>(
+	var proxy = new CacheProxyCollection<int, User>(
 		dataLoadFunc: id => Db.Users.Find(id), 
 		cache: Cache.AspNet, 
 		keyPrefix: "DateNow", 
@@ -73,7 +73,7 @@ Use a `CacheProxyCollection` in order to abstract access to a collection of cach
 
 You can manually set the data of a specific item
 
-	proxy.SetData(user, 1);
+	proxy.SetData(1, user);
 
 Or clear cached items
 

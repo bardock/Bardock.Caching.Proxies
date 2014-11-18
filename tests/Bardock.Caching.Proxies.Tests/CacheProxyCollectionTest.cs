@@ -15,7 +15,7 @@ namespace Bardock.Caching.Proxies.Tests
         {
             var cache = new Mock<CacheMock>() { CallBase = true };
 
-            var proxy = new CacheProxyCollection<DateTime, int>(num => DateTime.Now, cache: cache.Object, keyPrefix: KEY);
+            var proxy = new CacheProxyCollection<int, DateTime>(num => DateTime.Now, cache: cache.Object, keyPrefix: KEY);
 
             var v1_1 = proxy.GetData(1);
             Thread.Sleep(50);
@@ -37,7 +37,7 @@ namespace Bardock.Caching.Proxies.Tests
         {
             var cache = new Mock<CacheMock>() { CallBase = true };
 
-            var proxy = new CacheProxyCollection<DateTime, int>(num => DateTime.Now, cache: cache.Object, keyPrefix: KEY);
+            var proxy = new CacheProxyCollection<int, DateTime>(num => DateTime.Now, cache: cache.Object, keyPrefix: KEY);
 
             var v1_1 = proxy.GetData(1);
             Thread.Sleep(50);
@@ -66,7 +66,7 @@ namespace Bardock.Caching.Proxies.Tests
         {
             var cache = new Mock<CacheMock>() { CallBase = true };
 
-            var proxy = new CacheProxyCollection<DateTime, int>(num => DateTime.Now, cache: cache.Object, keyPrefix: KEY);
+            var proxy = new CacheProxyCollection<int, DateTime>(num => DateTime.Now, cache: cache.Object, keyPrefix: KEY);
 
             var v1_1 = proxy.GetData(1);
             Thread.Sleep(50);

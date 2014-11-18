@@ -82,6 +82,7 @@ namespace Bardock.Caching.Proxies
         /// <summary>
         /// Manually set data. This is useful when you just created or updated the data and want to store it in cache.
         /// </summary>
+        /// <param name="data">Data to be cached</param>
         public void SetData(T data)
         {
             _cache.Set(_key, data, GetExpiration(data));

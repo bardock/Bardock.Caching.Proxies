@@ -8,9 +8,9 @@ namespace Bardock.Caching.Proxies
     /// This class manages a set of proxies with the same data type.
     /// It identifies each proxy building a key by given variable params
     /// </summary>
-    /// <typeparam name="TData">Type of cached data</typeparam>
     /// <typeparam name="TParams">Type of params that identifies a cached item</typeparam>
-    public class DeferredCacheProxyCollection<TData, TParams>
+    /// <typeparam name="TData">Type of cached data</typeparam>
+    public class DeferredCacheProxyCollection<TParams, TData>
     {
         protected const string KEY_SEPARATOR = "_";
 
@@ -46,9 +46,12 @@ namespace Bardock.Caching.Proxies
         /// <summary>
         /// Get proxy data by specified params
         /// </summary>
+        /// <param name="params">Params that identifies an item</param>
+        /// <param name="dataLoadFunc">Gets data from original source</param>
+        /// <param name="locker">An optional object which will be used to lock parallel invocations of dataLoadFunc. E.g. it could be a database context that does not allow run queries in parallel.</param>
         public TData GetData(
-            Func<TParams, TData> dataLoadFunc,
             TParams @params,
+            Func<TParams, TData> dataLoadFunc,
             object locker = null)
         {
             string key = BuildKey(@params);
@@ -58,7 +61,9 @@ namespace Bardock.Caching.Proxies
         /// <summary>
         /// Manually set data by specified params. This is useful when you just created or updated the data and want to store it in cache.
         /// </summary>
-        public void SetData(TData data, TParams @params)
+        /// <param name="params">Params that identifies an item</param>
+        /// <param name="data">Data to be cached</param>
+        public void SetData(TParams @params, TData data)
         {
             string key = BuildKey(@params);
             GetProxy(key).SetData(data);
@@ -67,6 +72,7 @@ namespace Bardock.Caching.Proxies
         /// <summary>
         /// Clear a cached item by specified params
         /// </summary>
+        /// <param name="params">Params that identifies an item</param>
         public void Clear(TParams @params)
         {
             string key = BuildKey(@params);
