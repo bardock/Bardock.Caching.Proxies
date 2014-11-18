@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheMock.cs" />
+    <Compile Include="CacheProxyTest.cs" />
     <Compile Include="DeferredCacheProxyTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

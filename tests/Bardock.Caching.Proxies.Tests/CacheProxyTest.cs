@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Bardock.Caching.Proxies.Tests
 {
-    public class DeferredCacheProxyTest
+    public class CacheProxyTest
     {
         private const string KEY = "KEY";
 
@@ -16,18 +16,18 @@ namespace Bardock.Caching.Proxies.Tests
         {
             var cache = new Mock<CacheMock>() { CallBase = true };
 
-            var proxy = new DeferredCacheProxy<DateTime>(cache.Object, KEY);
+            var proxy = new CacheProxy<DateTime>(() => DateTime.Now, cache: cache.Object, key: KEY);
 
-            var v1 = proxy.GetData(() => DateTime.Now);
+            var v1 = proxy.GetData();
             Thread.Sleep(50);
-            var v2 = proxy.GetData(() => DateTime.Now);
+            var v2 = proxy.GetData();
             Thread.Sleep(50);
-            var v3 = proxy.GetData(() => DateTime.Now);
+            var v3 = proxy.GetData();
 
             Assert.Equal(v1, v2);
             Assert.Equal(v2, v3);
 
-            cache.Verify(c => c.Set(KEY, v1, DeferredCacheProxy<DateTime>.EXPIRATION_DEFAULT, SerializationFormat.Null), Times.Once);
+            cache.Verify(c => c.Set(KEY, v1, CacheProxy<DateTime>.EXPIRATION_DEFAULT, SerializationFormat.Null), Times.Once);
             cache.Verify(c => c.Get<DateTime>(KEY, SerializationFormat.Null), Times.Exactly(3));
         }
 
@@ -37,13 +37,13 @@ namespace Bardock.Caching.Proxies.Tests
             var cache = new Mock<CacheMock>() { CallBase = true };
 
             var expiration = TimeSpan.FromMinutes(1);
-            var proxy = new DeferredCacheProxy<DateTime>(cache.Object, KEY, expiration);
+            var proxy = new CacheProxy<DateTime>(() => DateTime.Now, cache: cache.Object, key: KEY, expiration: expiration);
 
-            var v1 = proxy.GetData(() => DateTime.Now);
+            var v1 = proxy.GetData();
             Thread.Sleep(50);
-            var v2 = proxy.GetData(() => DateTime.Now);
+            var v2 = proxy.GetData();
             Thread.Sleep(50);
-            var v3 = proxy.GetData(() => DateTime.Now);
+            var v3 = proxy.GetData();
 
             Assert.Equal(v1, v2);
             Assert.Equal(v2, v3);
@@ -57,20 +57,20 @@ namespace Bardock.Caching.Proxies.Tests
         {
             var cache = new Mock<CacheMock>() { CallBase = true };
 
-            var proxy = new DeferredCacheProxy<DateTime>(cache.Object, KEY);
+            var proxy = new CacheProxy<DateTime>(() => DateTime.Now, cache: cache.Object, key: KEY);
 
             DateTime v1 = default(DateTime);
             DateTime v2 = default(DateTime);
             DateTime v3 = default(DateTime);
             Parallel.Invoke(
-                () => { v1 = proxy.GetData(() => DateTime.Now); },
-                () => { v2 = proxy.GetData(() => DateTime.Now); },
-                () => { v3 = proxy.GetData(() => DateTime.Now); });
+                () => { v1 = proxy.GetData(); },
+                () => { v2 = proxy.GetData(); },
+                () => { v3 = proxy.GetData(); });
 
             Assert.Equal(v1, v2);
             Assert.Equal(v2, v3);
 
-            cache.Verify(c => c.Set(KEY, v1, DeferredCacheProxy<DateTime>.EXPIRATION_DEFAULT, SerializationFormat.Null), Times.Once);
+            cache.Verify(c => c.Set(KEY, v1, CacheProxy<DateTime>.EXPIRATION_DEFAULT, SerializationFormat.Null), Times.Once);
             cache.Verify(c => c.Get<DateTime>(KEY, SerializationFormat.Null), Times.Exactly(3));
         }
 
@@ -79,20 +79,22 @@ namespace Bardock.Caching.Proxies.Tests
         {
             var cache = new Mock<CacheMock>() { CallBase = true };
 
-            var proxy = new DeferredCacheProxy<DateTime>(cache.Object, KEY);
+            var proxy = new CacheProxy<DateTime>(() => DateTime.Now, cache: cache.Object, key: KEY);
 
-            var v1 = proxy.GetData(() => DateTime.Now);
+            var v1 = proxy.GetData();
             Thread.Sleep(50);
-            var v2 = proxy.GetData(() => DateTime.Now);
+            var v2 = proxy.GetData();
+            
             proxy.Clear();
+
             Thread.Sleep(50);
-            var v3 = proxy.GetData(() => DateTime.Now);
+            var v3 = proxy.GetData();
 
             Assert.Equal(v1, v2);
             Assert.NotEqual(v2, v3);
 
-            cache.Verify(c => c.Set(KEY, v1, DeferredCacheProxy<DateTime>.EXPIRATION_DEFAULT, SerializationFormat.Null), Times.Once);
-            cache.Verify(c => c.Set(KEY, v3, DeferredCacheProxy<DateTime>.EXPIRATION_DEFAULT, SerializationFormat.Null), Times.Once);
+            cache.Verify(c => c.Set(KEY, v1, CacheProxy<DateTime>.EXPIRATION_DEFAULT, SerializationFormat.Null), Times.Once);
+            cache.Verify(c => c.Set(KEY, v3, CacheProxy<DateTime>.EXPIRATION_DEFAULT, SerializationFormat.Null), Times.Once);
             cache.Verify(c => c.Get<DateTime>(KEY, SerializationFormat.Null), Times.Exactly(3));
         }
     }

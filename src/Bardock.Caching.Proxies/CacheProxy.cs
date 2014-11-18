@@ -10,19 +10,19 @@ namespace Bardock.Caching.Proxies
 
         public CacheProxy(
             Func<T> dataLoadFunc,
-            object locker,
             ICache cache,
             string key,
-            TimeSpan expiration = default(TimeSpan))
-            : this(dataLoadFunc, locker, cache, key, x => expiration)
+            TimeSpan expiration = default(TimeSpan),
+            object locker = null)
+            : this(dataLoadFunc, cache, key, x => expiration, locker)
         { }
 
         public CacheProxy(
             Func<T> dataLoadFunc,
-            object locker,
             ICache cache,
             string key,
-            Func<T, TimeSpan> expiration)
+            Func<T, TimeSpan> expiration,
+            object locker = null)
             : base(cache, key, expiration)
         {
             _dataLoadFunc = dataLoadFunc;
