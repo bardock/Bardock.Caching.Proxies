@@ -9,7 +9,7 @@ namespace Bardock.Caching.Proxies
     /// It identifies each proxy building a key by given variable params
     /// </summary>
     /// <typeparam name="TData">Type of cached data</typeparam>
-    /// <typeparam name="TData">Type of params that identifies a cached item</typeparam>
+    /// <typeparam name="TParams">Type of params that identifies a cached item</typeparam>
     public class DeferredCacheProxyCollection<TData, TParams>
     {
         protected const string KEY_SEPARATOR = "_";
@@ -18,6 +18,9 @@ namespace Bardock.Caching.Proxies
         protected string _keyPrefix;
         protected Func<TData, TimeSpan> _expiration;
 
+        /// <param name="cache">ICache implementation</param>
+        /// <param name="keyPrefix">Cache key prefix</param>
+        /// <param name="expiration">Cache expiration</param>
         public DeferredCacheProxyCollection(
             ICache cache,
             string keyPrefix,
@@ -25,6 +28,9 @@ namespace Bardock.Caching.Proxies
             : this(cache, keyPrefix, x => expiration)
         { }
 
+        /// <param name="cache">ICache implementation</param>
+        /// <param name="keyPrefix">Cache key prefix</param>
+        /// <param name="expiration">A function that recives the object that is going to be inserted in cache and returs the cache expiration to use</param>
         public DeferredCacheProxyCollection(
             ICache cache,
             string keyPrefix,
@@ -49,6 +55,9 @@ namespace Bardock.Caching.Proxies
             return GetProxy(key).GetData(() => dataLoadFunc(@params), locker);
         }
 
+        /// <summary>
+        /// Manually set data by specified params. This is useful when you just created or updated the data and want to store it in cache.
+        /// </summary>
         public void SetData(TData data, TParams @params)
         {
             string key = BuildKey(@params);
