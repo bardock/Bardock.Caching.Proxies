@@ -84,7 +84,7 @@ namespace Bardock.Caching.Proxies.Tests
             var v1 = proxy.GetData();
             Thread.Sleep(50);
             var v2 = proxy.GetData();
-            
+
             proxy.Clear();
 
             Thread.Sleep(50);
