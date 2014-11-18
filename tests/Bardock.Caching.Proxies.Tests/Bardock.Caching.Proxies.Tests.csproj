@@ -39,8 +39,9 @@
     <Reference Include="Moq">
       <HintPath>..\..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="Sixeyed.Caching">
-      <HintPath>..\..\packages\Sixeyed.Caching-Bardock.1.0.0-beta4\lib\net45\Sixeyed.Caching.dll</HintPath>
+    <Reference Include="Sixeyed.Caching, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Sixeyed.Caching-Bardock.1.0.0-beta5\lib\net45\Sixeyed.Caching.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
