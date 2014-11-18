@@ -15,7 +15,7 @@ namespace Bardock.Caching.Proxies.Tests
         {
             var cache = new Mock<CacheMock>() { CallBase = true };
 
-            var proxy = new CacheProxyCollection<DateTime>(@params => () => DateTime.Now, cache: cache.Object, keyPrefix: KEY);
+            var proxy = new CacheProxyCollection<DateTime, int>(num => DateTime.Now, cache: cache.Object, keyPrefix: KEY);
 
             var v1_1 = proxy.GetData(1);
             Thread.Sleep(50);
@@ -37,7 +37,7 @@ namespace Bardock.Caching.Proxies.Tests
         {
             var cache = new Mock<CacheMock>() { CallBase = true };
 
-            var proxy = new CacheProxyCollection<DateTime>(@params => () => DateTime.Now, cache: cache.Object, keyPrefix: KEY);
+            var proxy = new CacheProxyCollection<DateTime, int>(num => DateTime.Now, cache: cache.Object, keyPrefix: KEY);
 
             var v1_1 = proxy.GetData(1);
             Thread.Sleep(50);
@@ -66,7 +66,7 @@ namespace Bardock.Caching.Proxies.Tests
         {
             var cache = new Mock<CacheMock>() { CallBase = true };
 
-            var proxy = new CacheProxyCollection<DateTime>(@params => () => DateTime.Now, cache: cache.Object, keyPrefix: KEY);
+            var proxy = new CacheProxyCollection<DateTime, int>(num => DateTime.Now, cache: cache.Object, keyPrefix: KEY);
 
             var v1_1 = proxy.GetData(1);
             Thread.Sleep(50);
@@ -88,7 +88,7 @@ namespace Bardock.Caching.Proxies.Tests
             cache.Verify(c => c.Set(KEY + "_2", v2_2, DeferredCacheProxy<DateTime>.EXPIRATION_DEFAULT, SerializationFormat.Null), Times.Once);
             cache.Verify(c => c.Get<DateTime>(KEY + "_1", SerializationFormat.Null), Times.Exactly(3));
             cache.Verify(c => c.Get<DateTime>(KEY + "_2", SerializationFormat.Null), Times.Exactly(2));
-            cache.Verify(c => c.RemoveAll(KEY), Times.Once);
+            cache.Verify(c => c.RemoveAll(KEY + "_"), Times.Once);
         }
     }
 }

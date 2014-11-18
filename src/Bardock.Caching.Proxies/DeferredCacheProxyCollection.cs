@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Newtonsoft.Json;
 using Sixeyed.Caching;
 
 namespace Bardock.Caching.Proxies
@@ -10,16 +8,15 @@ namespace Bardock.Caching.Proxies
     /// This class manages a set of proxies with the same data type.
     /// It identifies each proxy building a key by given variable params
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <remarks></remarks>
-    public class DeferredCacheProxyCollection<T>
+    /// <typeparam name="TData">Type of cached data</typeparam>
+    /// <typeparam name="TData">Type of params that identifies a cached item</typeparam>
+    public class DeferredCacheProxyCollection<TData, TParams>
     {
-        protected const string KEY_PARAM_NULL = "NULL";
-        protected const string KEY_PARAM_SEPARATOR = "_";
+        protected const string KEY_SEPARATOR = "_";
 
         protected ICache _cache;
         protected string _keyPrefix;
-        protected Func<T, TimeSpan> _expiration;
+        protected Func<TData, TimeSpan> _expiration;
 
         public DeferredCacheProxyCollection(
             ICache cache,
@@ -31,7 +28,7 @@ namespace Bardock.Caching.Proxies
         public DeferredCacheProxyCollection(
             ICache cache,
             string keyPrefix,
-            Func<T, TimeSpan> expiration)
+            Func<TData, TimeSpan> expiration)
         {
             _cache = cache;
             if (keyPrefix == null)
@@ -43,16 +40,16 @@ namespace Bardock.Caching.Proxies
         /// <summary>
         /// Get proxy data by specified params
         /// </summary>
-        /// <remarks>
-        /// You must specified the @params in the order expected by dataLoadFunc
-        /// </remarks>
-        public T GetData(Func<T> dataLoadFunc, object locker = null, params object[] @params)
+        public TData GetData(
+            Func<TParams, TData> dataLoadFunc,
+            TParams @params,
+            object locker = null)
         {
             string key = BuildKey(@params);
-            return GetProxy(key).GetData(dataLoadFunc, locker);
+            return GetProxy(key).GetData(() => dataLoadFunc(@params), locker);
         }
 
-        public void SetData(T data, params object[] @params)
+        public void SetData(TData data, TParams @params)
         {
             string key = BuildKey(@params);
             GetProxy(key).SetData(data);
@@ -61,44 +58,29 @@ namespace Bardock.Caching.Proxies
         /// <summary>
         /// Clear a cached item by specified params
         /// </summary>
-        /// <param name="param1">First param (required)</param>
-        /// <param name="params">Next params (optional)</param>
-        public void Clear(object param1, params object[] @params)
+        public void Clear(TParams @params)
         {
-            string key = BuildKey(new[] { param1 }.Concat(@params));
+            string key = BuildKey(@params);
             GetProxy(key).Clear();
         }
 
         /// <summary>
         /// Clear all cached items
         /// </summary>
-        /// <param name="params">
-        /// Specify some of the params in order to filter the cached items to be removed.
-        /// If no param is specified, removes all cached items for this proxy instance.
-        /// </param>
-        public void ClearAll(params object[] @params)
+        public void ClearAll()
         {
-            string keyPrefix = BuildKey(@params);
-            _cache.RemoveAll(keyPrefix: keyPrefix);
+            _cache.RemoveAll(keyPrefix: _keyPrefix + KEY_SEPARATOR);
+            // TODO: partial remove building a key prefix
         }
 
-        protected string BuildKey(IEnumerable<object> @params)
+        protected string BuildKey(TParams @params)
         {
-            StringBuilder keyBuilder = new System.Text.StringBuilder();
-            keyBuilder.Append(_keyPrefix);
-
-            foreach (object param in @params)
-            {
-                keyBuilder
-                    .Append(KEY_PARAM_SEPARATOR)
-                    .Append(param == null ? KEY_PARAM_NULL : param.ToString());
-            }
-            return keyBuilder.ToString();
+            return _keyPrefix + KEY_SEPARATOR + JsonConvert.SerializeObject(@params);
         }
 
-        protected DeferredCacheProxy<T> GetProxy(string key)
+        protected DeferredCacheProxy<TData> GetProxy(string key)
         {
-            return new DeferredCacheProxy<T>(_cache, key, _expiration);
+            return new DeferredCacheProxy<TData>(_cache, key, _expiration);
         }
     }
 }

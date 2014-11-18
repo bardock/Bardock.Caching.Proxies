@@ -36,6 +36,9 @@
     <Reference Include="Bardock.Utils.Logger">
       <HintPath>..\..\packages\Bardock.Utils.Logger.3.0.1\lib\net45\Bardock.Utils.Logger.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.5.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Sixeyed.Caching, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Sixeyed.Caching-Bardock.1.0.0-beta5\lib\net45\Sixeyed.Caching.dll</HintPath>
