@@ -34,20 +34,22 @@ namespace Bardock.Caching.Proxies
 
         public T GetData(Func<T> dataLoadFunc, object locker = null)
         {
-            T data;
-            try
+            // Avoid multiple invocations to the data load function.
+            // Always lock by key because this is the recommended way using distributed cache.
+            lock (_locker.GetLockObject(_key))
             {
-                data = _cache.Get<T>(_key);
-            }
-            catch (CacheKeyNotFoundException)
-            {
-                lock (_locker.GetLockObject(_key))
+                T data;
+                try
+                {
+                    data = _cache.Get<T>(_key);
+                }
+                catch (CacheKeyNotFoundException)
                 {
                     data = InvokeFunc(dataLoadFunc, locker: locker);
                     SetData(data);
                 }
+                return data;
             }
-            return data;
         }
 
         private T InvokeFunc(Func<T> f, object locker)
