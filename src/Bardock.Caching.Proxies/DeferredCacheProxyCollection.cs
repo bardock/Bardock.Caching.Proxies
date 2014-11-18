@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Sixeyed.Caching;
 
@@ -44,7 +46,7 @@ namespace Bardock.Caching.Proxies
         /// <remarks>
         /// You must specified the @params in the order expected by dataLoadFunc
         /// </remarks>
-        public T GetData(Func<T> dataLoadFunc, object locker, params object[] @params)
+        public T GetData(Func<T> dataLoadFunc, object locker = null, params object[] @params)
         {
             string key = BuildKey(@params);
             return GetProxy(key).GetData(dataLoadFunc, locker);
@@ -59,9 +61,11 @@ namespace Bardock.Caching.Proxies
         /// <summary>
         /// Clear a cached item by specified params
         /// </summary>
-        public void Clear(params object[] @params)
+        /// <param name="param1">First param (required)</param>
+        /// <param name="params">Next params (optional)</param>
+        public void Clear(object param1, params object[] @params)
         {
-            string key = BuildKey(@params);
+            string key = BuildKey(new[] { param1 }.Concat(@params));
             GetProxy(key).Clear();
         }
 
@@ -78,7 +82,7 @@ namespace Bardock.Caching.Proxies
             _cache.RemoveAll(keyPrefix: keyPrefix);
         }
 
-        protected string BuildKey(params object[] @params)
+        protected string BuildKey(IEnumerable<object> @params)
         {
             StringBuilder keyBuilder = new System.Text.StringBuilder();
             keyBuilder.Append(_keyPrefix);

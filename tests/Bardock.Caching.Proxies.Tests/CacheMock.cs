@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Sixeyed.Caching;
 
 namespace Bardock.Caching.Proxies.Tests
@@ -61,12 +62,21 @@ namespace Bardock.Caching.Proxies.Tests
 
         public virtual void RemoveAll(string keyPrefix)
         {
-            throw new NotImplementedException();
+            if (keyPrefix == null)
+            {
+                Reset();
+            }
+            else
+            {
+                _storage = _storage
+                    .Where(x => !x.Key.StartsWith(keyPrefix))
+                    .ToDictionary(x => x.Key, x => x.Value);
+            }
         }
 
         public virtual void RemoveAll()
         {
-            Reset();
+            RemoveAll(keyPrefix: null);
         }
 
         public virtual Sixeyed.Caching.Serialization.Serializer Serializer
