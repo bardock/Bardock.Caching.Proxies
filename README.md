@@ -27,22 +27,22 @@ var proxy = new CacheProxy<User>(
 	key: "Users", 
 	expiration: TimeSpan.FromSeconds(1));
 
-var v1 = proxy.GetData();
+var users1 = proxy.GetData();
 // Executes dataLoadFunc and stores the return value in cache
 
 Thread.Sleep(100);
-var v2 = proxy.GetData();
-// Gets value from cache (v2 is equal than v1)
+var users2 = proxy.GetData();
+// Gets value from cache (users2 is equal than users1)
 
 Thread.Sleep(1000);
-var v3 = proxy.GetData();
+var users3 = proxy.GetData();
 // Cache item is expired, executes dataLoadFunc again and stores the return value in cache
 ```
 
 You can manually set the data (useful when you just created or updated the data and want to store it)
 
 ```C#
-proxy.SetData(user);
+proxy.SetData(users);
 ```
 
 Or clear cached item
@@ -64,18 +64,18 @@ var proxy = new CacheProxyCollection<int, User>(
 	keyPrefix: "Users", 
 	expiration: TimeSpan.FromSeconds(1));
 
-var v1a = proxy.GetData(1);
+var user1a = proxy.GetData(1);
 // Executes dataLoadFunc (finds user with ID == 1) and stores the return value in cache
 
-var v2a = proxy.GetData(2);
+var user2a = proxy.GetData(2);
 // Executes dataLoadFunc (finds user with ID == 2) and stores the return value in cache
 
 Thread.Sleep(100);
-var v1b = proxy.GetData(1);
-// Gets value from cache (v1b is equal than v1a)
+var user1b = proxy.GetData(1);
+// Gets value from cache (user1b is equal than user1a)
 
 Thread.Sleep(1000);
-var v1c = proxy.GetData(1);
+var user1c = proxy.GetData(1);
 // Cache item is expired, executes dataLoadFunc again and stores the return value in cache
 ```
 
