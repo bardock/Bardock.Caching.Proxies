@@ -19,6 +19,7 @@ Install [nuget package](https://www.nuget.org/packages/Bardock.Caching.Proxies/)
 
 Use a `CacheProxy` in order to abstract access to a cache item
 
+```C#
 	// Define a proxy for database users and cache them for 1 second
 	var proxy = new CacheProxy<User>(
 		dataLoadFunc: () => Db.Users.ToList(), 
@@ -36,6 +37,7 @@ Use a `CacheProxy` in order to abstract access to a cache item
     Thread.Sleep(1000);
     var v3 = proxy.GetData();
 	// Cache item is expired, executes dataLoadFunc again and stores the return value in cache
+```
 
 You can manually set the data (useful when you just created or updated the data and want to store it)
 
