@@ -90,7 +90,11 @@ namespace Bardock.Caching.Proxies
 
         protected string BuildKey(TParams @params)
         {
-            return _keyPrefix + KEY_SEPARATOR + JsonConvert.SerializeObject(@params);
+            var serializedParams = (@params != null && @params is string)
+                ? @params.ToString()
+                : JsonConvert.SerializeObject(@params);
+
+            return _keyPrefix + KEY_SEPARATOR + serializedParams;
         }
 
         protected DeferredCacheProxy<TData> GetProxy(string key)
