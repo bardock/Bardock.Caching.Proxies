@@ -19,11 +19,11 @@ Install [nuget package](https://www.nuget.org/packages/Bardock.Caching.Proxies/)
 
 Use a `CacheProxy` in order to abstract access to a cache item
 
-	// Define a proxy for database users caching for 1 second
+	// Define a proxy for database users and cache them for 1 second
 	var proxy = new CacheProxy<User>(
 		dataLoadFunc: () => Db.Users.ToList(), 
 		cache: Cache.AspNet, 
-		key: "DateNow", 
+		key: "Users", 
 		expiration: TimeSpan.FromSeconds(1));
 
     var v1 = proxy.GetData();
@@ -49,12 +49,12 @@ Or clear cached item
 
 Use a `CacheProxyCollection` in order to abstract access to a collection of cache items
 
-	// Define a proxy for database users caching for 1 second
+	// Define a proxy for database users and cache them for 1 second
 	// Use user ID (int) to identify each item 
 	var proxy = new CacheProxyCollection<int, User>(
 		dataLoadFunc: id => Db.Users.Find(id), 
 		cache: Cache.AspNet, 
-		keyPrefix: "DateNow", 
+		keyPrefix: "Users", 
 		expiration: TimeSpan.FromSeconds(1));
 
     var v1a = proxy.GetData(1);
