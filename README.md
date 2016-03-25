@@ -5,9 +5,9 @@ Provides classes that abstract access to a cache item or collection of cache ite
 
 ## Dependencies
 
-* Bardock.Utils
-* Newtonsoft.Json
-* Sixeyed.Caching-Bardock
+* [Bardock.Utils](https://github.com/bardock/Bardock.Utils)
+* [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
+* [Sixeyed.Caching-Bardock](https://github.com/bardock/caching)
 
 ## Usage
 
